@@ -1,0 +1,26 @@
+\title{A Simple LaTeX Document}
+\author{John Doe}
+
+\maketitle
+
+\section{Introduction}
+
+\begin{question}
+This is a simple LaTeX document.
+\end{question}
+
+\begin{answer}
+LaTeX is a powerful tool for creating professionally formatted documents.
+\end{answer}
+
+\section{Main Content}
+
+Here is a paragraph of text. LaTeX makes it easy to manage sections, references, and more.
+
+Another paragraph of text goes here. You can add mathematical formulas like \( E = mc^2 \) easily within the text.
+
+\section{Conclusion}
+
+This is the conclusion of the document. LaTeX allows you to focus on content while it handles the formatting.
+
+

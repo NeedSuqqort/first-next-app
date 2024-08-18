@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Editor from 'markdown-latex';
-import { MathpixMarkdownModel as MM } from 'mathpix-markdown-it';
+import Editor from './Editor';
 
 interface AppState {
   value: string;
@@ -15,19 +14,18 @@ export default class Second extends Component<{}, AppState> {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(value: string){
+  handleChange(value: string) {
     this.setState({
-        value
+      value
     });
   }
 
   render() {
     const { value } = this.state;
-    return(
+    return (
       <div>
-        <Editor value={value} onChange={this.handleChange} language='en'/>
-        {/* <textarea value={(this.state.value)}></textarea> */}
+        <Editor value={value} onChange={this.handleChange} />
       </div>
-    )
+    );
   }
 }
