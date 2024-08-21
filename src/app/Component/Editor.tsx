@@ -1,4 +1,5 @@
-import React, { Component, FormEvent } from 'react';
+"use client"
+import React, { useState } from 'react';
 import { MathpixMarkdownModel as MM } from 'mathpix-markdown-it';
 
 interface EditorProps {
@@ -6,36 +7,25 @@ interface EditorProps {
   onChange: (value: string) => void;
 }
 
-interface EditorState {
-  parsedQuestions: string[];
-  parsedAnswers: string[];
-}
+const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
+  const [parsedQuestions, setParsedQuestions] = useState<string[]>([]);
+  const [parsedAnswers, setParsedAnswers] = useState<string[]>([]);
 
-class Editor extends Component<EditorProps, EditorState> {
-  constructor(props: EditorProps) {
-    super(props);
-    this.state = {
-      parsedQuestions: [],
-      parsedAnswers: []
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(event.target.value);
+  };
 
-  handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    this.props.onChange(event.target.value);
-  }
-
-  handleSubmit(event: FormEvent) {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const { parsedText, questions, answers } = this.parseCustomSyntax(this.props.value);
-    this.setState({ parsedQuestions: questions, parsedAnswers: answers });
+    const { parsedText, questions, answers } = parseCustomSyntax(value);
+    setParsedQuestions(questions);
+    setParsedAnswers(answers);
 
     const result = MM.markdownToHTML(parsedText);
     document.getElementById('preview-content')!.innerHTML = result;
-  }
+  };
 
-  parseCustomSyntax(text: string): { parsedText: string; questions: string[]; answers: string[] } {
+  const parseCustomSyntax = (text: string): { parsedText: string; questions: string[]; answers: string[] } => {
     const questionRegex = /\\begin{question}([\s\S]*?)\\end{question}/g;
     const answerRegex = /\\begin{answer}([\s\S]*?)\\end{answer}/g;
 
@@ -55,43 +45,39 @@ class Editor extends Component<EditorProps, EditorState> {
     });
 
     return { parsedText: text, questions, answers };
-  }
+  };
 
-  render() {
-    const { parsedQuestions, parsedAnswers } = this.state;
+  return (
+    <div style={styles.container}>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <h1 style={styles.header}>Input Text with LaTeX:</h1>
+        <textarea value={value} onChange={handleChange} style={styles.textarea} />
+        <input type="submit" value="Convert" style={styles.button} />
+      </form>
+      <div id="preview-content" style={styles.previewContent} />
 
-    return (
-      <div style={styles.container}>
-        <form onSubmit={this.handleSubmit} style={styles.form}>
-          <h1 style={styles.header}>Input Text with LaTeX:</h1>
-          <textarea
-            value={this.props.value}
-            onChange={this.handleChange}
-            style={styles.textarea}
-          />
-          <input type="submit" value="Convert" style={styles.button} />
-        </form>
-        <div id='preview-content' style={styles.previewContent} />
-
-        {/* Display parsed questions and answers */}
-        <div style={styles.qaContainer}>
-          <h2 style={styles.qaHeader}>Parsed Questions</h2>
-          <ul style={styles.qaList}>
-            {parsedQuestions.map((q, index) => (
-              <li key={index} style={styles.qaItem}>{q}</li>
-            ))}
-          </ul>
-          <h2 style={styles.qaHeader}>Parsed Answers</h2>
-          <ul style={styles.qaList}>
-            {parsedAnswers.map((a, index) => (
-              <li key={index} style={styles.qaItem}>{a}</li>
-            ))}
-          </ul>
-        </div>
+      {/* Display parsed questions and answers */}
+      <div style={styles.qaContainer}>
+        <h2 style={styles.qaHeader}>Parsed Questions</h2>
+        <ul style={styles.qaList}>
+          {parsedQuestions.map((q, index) => (
+            <li key={index} style={styles.qaItem}>
+              Q{index + 1}: {q}
+            </li>
+          ))}
+        </ul>
+        <h2 style={styles.qaHeader}>Parsed Answers</h2>
+        <ul style={styles.qaList}>
+          {parsedAnswers.map((a, index) => (
+            <li key={index} style={styles.qaItem}>
+              A{index + 1}: {a}
+            </li>
+          ))}
+        </ul>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const styles = {
   container: {

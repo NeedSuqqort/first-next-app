@@ -1,3 +1,4 @@
+"use client"
 import React, { Component } from 'react';
 import Editor from './Editor';
 
@@ -5,7 +6,7 @@ interface AppState {
   value: string;
 }
 
-export default class Second extends Component<{}, AppState> {
+export default class EditorWrapper extends Component<{}, AppState> {
   constructor(props: {}) {
     super(props);
     this.state = {

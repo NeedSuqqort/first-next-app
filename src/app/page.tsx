@@ -1,18 +1,8 @@
-"use client"
-import Second from "./Component/Second";
+import EditorWrapper from "./Component/EditorWrapper";
 export default function Page(){
-  if (typeof window === 'undefined') {
-    return(
-      <div>
-        Loading...
-      </div>
-    )
-  } else {
-    console.log(window)
-    return(
-      <div>
-        <Second />
-      </div>
-    )
-  }
+  return(
+    <div>
+      <EditorWrapper />
+    </div>
+  )
 }
